@@ -49,7 +49,12 @@
       <div class="col-2">
         <form action="" @submit.prevent="view">
           <div class="input-group">
-            <input type="text" v-model="search" placeholder="search" class="form-control" />
+            <input
+              type="text"
+              v-model="search"
+              placeholder="search"
+              class="form-control"
+            />
             <div class="input-group-append">
               <button type="submit" class="btn btn-primary backColor">
                 <i class="fa-solid fa-magnifying-glass"></i>
@@ -61,7 +66,6 @@
     </div>
     <!-- search end -->
 
-    
     <div class="row">
       <!-- create -->
       <div class="col-3">
@@ -72,7 +76,10 @@
             </h4>
           </div>
           <div class="card-body">
-            <AlertError :form="product" message="There were some problems with your input." />
+            <AlertError
+              :form="product"
+              message="There were some problems with your input."
+            />
             <form action="" @submit.prevent="isEditMode ? update() : store()">
               <div class="form-group mb-1">
                 <label for="">Name</label>
@@ -131,11 +138,10 @@
                   class="form-control"
                   placeholder="enter product stock"
                 />
-              
               </div>
               <button type="submit" class="btn btn-block mt-3 backColor">
                 <i class="fa-solid fa-floppy-disk mr-1"></i>
-                {{ isEditMode ? "Update" : "Save"}}
+                {{ isEditMode ? "Update" : "Save" }}
               </button>
             </form>
           </div>
@@ -169,46 +175,49 @@
                 <button class="btn btn-success btn-sm" @click="edit(product)">
                   <i class="fa-solid fa-pen-to-square"></i>
                 </button>
-                <button class="btn btn-danger btn-sm" @click="destroy(product.id)">
+                <button
+                  class="btn btn-danger btn-sm"
+                  @click="destroy(product.id)"
+                >
                   <i class="fa-solid fa-trash-can"></i>
                 </button>
               </td>
             </tr>
           </tbody>
         </table>
-        <pagination :data="products"  @pagination-change-page="view"> </pagination>
+        <pagination :data="products" @pagination-change-page="view">
+        </pagination>
       </div>
       <!-- data end -->
     </div>
-  
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import Form from 'vform';
+import Form from "vform";
 import {
   Button,
   HasError,
   AlertError,
   AlertErrors,
-  AlertSuccess
-} from 'vform/src/components/bootstrap5';
-Vue.component(Button.name, Button)
-Vue.component(HasError.name, HasError)
-Vue.component(AlertError.name, AlertError)
-Vue.component(AlertErrors.name, AlertErrors)
-Vue.component(AlertSuccess.name, AlertSuccess)
+  AlertSuccess,
+} from "vform/src/components/bootstrap5";
+Vue.component(Button.name, Button);
+Vue.component(HasError.name, HasError);
+Vue.component(AlertError.name, AlertError);
+Vue.component(AlertErrors.name, AlertErrors);
+Vue.component(AlertSuccess.name, AlertSuccess);
 
 export default {
   name: "ProductComponent",
   data() {
     return {
       isEditMode: false,
-      search:'',
+      search: "",
       products: {},
-      product: new Form( {
-        id:"",
+      product: new Form({
+        id: "",
         name: "",
         brand: "",
         model: "",
@@ -219,21 +228,27 @@ export default {
     };
   },
   methods: {
-    view(page=1) {
-      axios.get(`/api/products?page=${page}&search=${this.search}`).then((res) => {
-        this.products = res.data;
-      });
+    view(page = 1) {
+      axios
+        .get(`/api/products?page=${page}&search=${this.search}`)
+        .then((res) => {
+          this.products = res.data;
+        });
     },
     create() {
       this.product.clear();
       this.isEditMode = false;
       this.product.reset();
-     
+      
     },
     store() {
       this.product.post("/api/products").then((res) => {
         this.view();
         this.product.reset();
+        Toast.fire({
+  icon: 'success',
+  title: 'Created successfully'
+})
       });
     },
     edit(product) {
@@ -242,20 +257,35 @@ export default {
       this.product.fill(product);
     },
     update() {
-      this.product
-        .put(`/api/products/${this.product.id}`)
-        .then((res) => {
-          this.view();
-          this.product.reset();
-        });
+      this.product.put(`/api/products/${this.product.id}`).then((res) => {
+        this.view();
+        this.product.reset();
+        Toast.fire({
+  icon: 'success',
+  title: 'Updated successfully'
+})
+      });
     },
-    destroy(id){
-      if(!confirm('Are you sure you want to delete')){
-        return
-      }
-      axios.delete(`/api/products/${id}`)
-      .then(res=> this.view());
-    }
+    destroy(id) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
+        axios.delete(`/api/products/${id}`).then((res) => this.view());
+        if (result.isConfirmed) {
+          Swal.fire("Deleted!", "Your product has been deleted.", "success");
+          Toast.fire({
+            icon: "success",
+            title: "Deleted successfully",
+          });
+        }
+      });
+    },
   },
   created() {
     this.view();
