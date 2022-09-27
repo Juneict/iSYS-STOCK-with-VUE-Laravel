@@ -21,7 +21,14 @@ window.Toast = Swal.mixin({
       toast.addEventListener('mouseleave', Swal.resumeTimer)
     }
   })
+  
+import VueProgressBar from 'vue-progressbar'
 
+  Vue.use(VueProgressBar, {
+    color: 'rgb(143, 255, 199)',
+    failedColor: 'red',
+    height: '2px'
+  })
 
 Vue.component('pagination', require('laravel-vue-pagination'));
 

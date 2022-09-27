@@ -17,13 +17,9 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->string("name");
             $table->string("brand");
-            $table->string("model");
             $table->string("category");
             $table->integer("sale_price");
-            $table->integer("purchase_price");
             $table->integer("stock");
-            $table->integer("sold")->nullable();
-            $table->integer("instock")->nullable();
             $table->timestamps();
         });
     }

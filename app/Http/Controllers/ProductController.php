@@ -75,7 +75,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        $product->update($request->only('name','model','brand','category','sale_price','stock'));
+        $product->update($request->only('name','brand','category','sale_price','stock'));
         return $product;
     }
 

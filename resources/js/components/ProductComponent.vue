@@ -8,21 +8,10 @@
         </div>
       </div>
       <!-- search -->
-      <div class="col-2">
+      <div class="col-3">
         <button type="submit" class="btn backColor" @click="create">
           <i class="fa-solid fa-circle-plus mr-1"></i> Create
         </button>
-      </div>
-      <div class="col-1">
-        <select
-          class="form-control form-select"
-          aria-label="Default select example"
-        >
-          <option selected>Model</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
-        </select>
       </div>
       <div class="col-2">
         <select
@@ -102,16 +91,6 @@
                 <HasError :form="product" field="brand" />
               </div>
               <div class="form-group mb-1">
-                <label for="">Model</label>
-                <input
-                  type="text"
-                  v-model="product.model"
-                  class="form-control"
-                  placeholder="enter product model"
-                />
-                <HasError :form="product" field="model" />
-              </div>
-              <div class="form-group mb-1">
                 <label for="">Category</label>
                 <input
                   type="text"
@@ -156,7 +135,6 @@
             <tr>
               <th>Name</th>
               <th>Brand</th>
-              <th>Model</th>
               <th>Category</th>
               <th>Price</th>
               <th>Stock</th>
@@ -167,7 +145,6 @@
             <tr v-for="product in products.data" :key="product.id">
               <td>{{ product.name }}</td>
               <td>{{ product.brand }}</td>
-              <td>{{ product.model }}</td>
               <td>{{ product.category }}</td>
               <td>{{ product.sale_price }}</td>
               <td>{{ product.stock }}</td>
@@ -220,7 +197,6 @@ export default {
         id: "",
         name: "",
         brand: "",
-        model: "",
         category: "",
         sale_price: "",
         stock: "",
@@ -229,26 +205,35 @@ export default {
   },
   methods: {
     view(page = 1) {
+      this.$Progress.start();
       axios
         .get(`/api/products?page=${page}&search=${this.search}`)
         .then((res) => {
           this.products = res.data;
+          this.$Progress.finish();
+        })
+        .catch((error) => {
+          this.$Progress.fail();
         });
     },
     create() {
       this.product.clear();
       this.isEditMode = false;
       this.product.reset();
-      
+      model: "",
+        this.product.post("/api/products").then((res) => {
+          this.view();
+          this.product.reset();
+        });
     },
     store() {
       this.product.post("/api/products").then((res) => {
         this.view();
         this.product.reset();
         Toast.fire({
-  icon: 'success',
-  title: 'Created successfully'
-})
+          icon: "success",
+          title: "Created successfully",
+        });
       });
     },
     edit(product) {
@@ -261,9 +246,9 @@ export default {
         this.view();
         this.product.reset();
         Toast.fire({
-  icon: 'success',
-  title: 'Updated successfully'
-})
+          icon: "success",
+          title: "Updated successfully",
+        });
       });
     },
     destroy(id) {

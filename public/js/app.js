@@ -5336,7 +5336,6 @@ Vue.component(vform_src_components_bootstrap5__WEBPACK_IMPORTED_MODULE_2__.Alert
         id: "",
         name: "",
         brand: "",
-        model: "",
         category: "",
         sale_price: "",
         stock: ""
@@ -5348,26 +5347,39 @@ Vue.component(vform_src_components_bootstrap5__WEBPACK_IMPORTED_MODULE_2__.Alert
       var _this = this;
 
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      this.$Progress.start();
       axios__WEBPACK_IMPORTED_MODULE_0___default().get("/api/products?page=".concat(page, "&search=").concat(this.search)).then(function (res) {
         _this.products = res.data;
+
+        _this.$Progress.finish();
+      })["catch"](function (error) {
+        _this.$Progress.fail();
       });
     },
     create: function create() {
+      var _this2 = this;
+
       this.product.clear();
       this.isEditMode = false;
       this.product.reset();
-    },
-    store: function store() {
-      var _this2 = this;
 
-      this.product.post("/api/products").then(function (res) {
+      model: "", this.product.post("/api/products").then(function (res) {
         _this2.view();
 
         _this2.product.reset();
+      });
+    },
+    store: function store() {
+      var _this3 = this;
+
+      this.product.post("/api/products").then(function (res) {
+        _this3.view();
+
+        _this3.product.reset();
 
         Toast.fire({
-          icon: 'success',
-          title: 'Created successfully'
+          icon: "success",
+          title: "Created successfully"
         });
       });
     },
@@ -5377,21 +5389,21 @@ Vue.component(vform_src_components_bootstrap5__WEBPACK_IMPORTED_MODULE_2__.Alert
       this.product.fill(product);
     },
     update: function update() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.product.put("/api/products/".concat(this.product.id)).then(function (res) {
-        _this3.view();
+        _this4.view();
 
-        _this3.product.reset();
+        _this4.product.reset();
 
         Toast.fire({
-          icon: 'success',
-          title: 'Updated successfully'
+          icon: "success",
+          title: "Updated successfully"
         });
       });
     },
     destroy: function destroy(id) {
-      var _this4 = this;
+      var _this5 = this;
 
       Swal.fire({
         title: "Are you sure?",
@@ -5403,7 +5415,7 @@ Vue.component(vform_src_components_bootstrap5__WEBPACK_IMPORTED_MODULE_2__.Alert
         confirmButtonText: "Yes, delete it!"
       }).then(function (result) {
         axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("/api/products/".concat(id)).then(function (res) {
-          return _this4.view();
+          return _this5.view();
         });
 
         if (result.isConfirmed) {
@@ -5444,7 +5456,7 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "row justify-content-end mb-3 mt-3"
   }, [_vm._m(0), _vm._v(" "), _c("div", {
-    staticClass: "col-2"
+    staticClass: "col-3"
   }, [_c("button", {
     staticClass: "btn backColor",
     attrs: {
@@ -5455,7 +5467,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fa-solid fa-circle-plus mr-1"
-  }), _vm._v(" Create\n      ")])]), _vm._v(" "), _vm._m(1), _vm._v(" "), _vm._m(2), _vm._v(" "), _vm._m(3), _vm._v(" "), _c("div", {
+  }), _vm._v(" Create\n      ")])]), _vm._v(" "), _vm._m(1), _vm._v(" "), _vm._m(2), _vm._v(" "), _c("div", {
     staticClass: "col-2"
   }, [_c("form", {
     attrs: {
@@ -5490,7 +5502,7 @@ var render = function render() {
         _vm.search = $event.target.value;
       }
     }
-  }), _vm._v(" "), _vm._m(4)])])])]), _vm._v(" "), _c("div", {
+  }), _vm._v(" "), _vm._m(3)])])])]), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-3"
@@ -5582,39 +5594,6 @@ var render = function render() {
     attrs: {
       form: _vm.product,
       field: "brand"
-    }
-  })], 1), _vm._v(" "), _c("div", {
-    staticClass: "form-group mb-1"
-  }, [_c("label", {
-    attrs: {
-      "for": ""
-    }
-  }, [_vm._v("Model")]), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.product.model,
-      expression: "product.model"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "text",
-      placeholder: "enter product model"
-    },
-    domProps: {
-      value: _vm.product.model
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-
-        _vm.$set(_vm.product, "model", $event.target.value);
-      }
-    }
-  }), _vm._v(" "), _c("HasError", {
-    attrs: {
-      form: _vm.product,
-      field: "model"
     }
   })], 1), _vm._v(" "), _c("div", {
     staticClass: "form-group mb-1"
@@ -5716,10 +5695,10 @@ var render = function render() {
     staticClass: "col-9"
   }, [_c("table", {
     staticClass: "table"
-  }, [_vm._m(5), _vm._v(" "), _c("tbody", _vm._l(_vm.products.data, function (product) {
+  }, [_vm._m(4), _vm._v(" "), _c("tbody", _vm._l(_vm.products.data, function (product) {
     return _c("tr", {
       key: product.id
-    }, [_c("td", [_vm._v(_vm._s(product.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.brand))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.model))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.category))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.sale_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.stock))]), _vm._v(" "), _c("td", [_c("button", {
+    }, [_c("td", [_vm._v(_vm._s(product.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.brand))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.category))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.sale_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.stock))]), _vm._v(" "), _c("td", [_c("button", {
       staticClass: "btn btn-success btn-sm",
       on: {
         click: function click($event) {
@@ -5761,34 +5740,6 @@ var staticRenderFns = [function () {
   }), _vm._v(" iSYS APP")]), _vm._v(" "), _c("span", {
     staticClass: "head-span"
   }, [_vm._v("stock management system")])])]);
-}, function () {
-  var _vm = this,
-      _c = _vm._self._c;
-
-  return _c("div", {
-    staticClass: "col-1"
-  }, [_c("select", {
-    staticClass: "form-control form-select",
-    attrs: {
-      "aria-label": "Default select example"
-    }
-  }, [_c("option", {
-    attrs: {
-      selected: ""
-    }
-  }, [_vm._v("Model")]), _vm._v(" "), _c("option", {
-    attrs: {
-      value: "1"
-    }
-  }, [_vm._v("One")]), _vm._v(" "), _c("option", {
-    attrs: {
-      value: "2"
-    }
-  }, [_vm._v("Two")]), _vm._v(" "), _c("option", {
-    attrs: {
-      value: "3"
-    }
-  }, [_vm._v("Three")])])]);
 }, function () {
   var _vm = this,
       _c = _vm._self._c;
@@ -5863,7 +5814,7 @@ var staticRenderFns = [function () {
   var _vm = this,
       _c = _vm._self._c;
 
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Name")]), _vm._v(" "), _c("th", [_vm._v("Brand")]), _vm._v(" "), _c("th", [_vm._v("Model")]), _vm._v(" "), _c("th", [_vm._v("Category")]), _vm._v(" "), _c("th", [_vm._v("Price")]), _vm._v(" "), _c("th", [_vm._v("Stock")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Name")]), _vm._v(" "), _c("th", [_vm._v("Brand")]), _vm._v(" "), _c("th", [_vm._v("Category")]), _vm._v(" "), _c("th", [_vm._v("Price")]), _vm._v(" "), _c("th", [_vm._v("Stock")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
 }];
 render._withStripped = true;
 
@@ -5880,6 +5831,8 @@ render._withStripped = true;
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vue_progressbar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-progressbar */ "./node_modules/vue-progressbar/dist/vue-progressbar.js");
+/* harmony import */ var vue_progressbar__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_progressbar__WEBPACK_IMPORTED_MODULE_1__);
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -5900,6 +5853,12 @@ window.Toast = sweetalert2__WEBPACK_IMPORTED_MODULE_0___default().mixin({
     toast.addEventListener('mouseenter', (sweetalert2__WEBPACK_IMPORTED_MODULE_0___default().stopTimer));
     toast.addEventListener('mouseleave', (sweetalert2__WEBPACK_IMPORTED_MODULE_0___default().resumeTimer));
   }
+});
+
+Vue.use((vue_progressbar__WEBPACK_IMPORTED_MODULE_1___default()), {
+  color: 'rgb(143, 255, 199)',
+  failedColor: 'red',
+  height: '2px'
 });
 Vue.component('pagination', __webpack_require__(/*! laravel-vue-pagination */ "./node_modules/laravel-vue-pagination/dist/laravel-vue-pagination.common.js"));
 Vue.component('product-component', (__webpack_require__(/*! ./components/ProductComponent.vue */ "./resources/js/components/ProductComponent.vue")["default"]));
@@ -34948,6 +34907,17 @@ function normalizeComponent(
     options: options
   }
 }
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-progressbar/dist/vue-progressbar.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/vue-progressbar/dist/vue-progressbar.js ***!
+  \**************************************************************/
+/***/ (function(module) {
+
+!function(t,o){ true?module.exports=o():0}(this,function(){"use strict";!function(){if("undefined"!=typeof document){var t=document.head||document.getElementsByTagName("head")[0],o=document.createElement("style"),i=" .__cov-progress { opacity: 1; z-index: 999999; } ";o.type="text/css",o.styleSheet?o.styleSheet.cssText=i:o.appendChild(document.createTextNode(i)),t.appendChild(o)}}();var t="undefined"!=typeof window,r={render:function(){var t=this,o=t.$createElement;return(t._self._c||o)("div",{staticClass:"__cov-progress",style:t.style})},staticRenderFns:[],name:"VueProgress",serverCacheKey:function(){return"Progress"},computed:{style:function(){var t=this.progress,o=t.options,i=!!o.show,e=o.location,s={"background-color":o.canSuccess?o.color:o.failedColor,opacity:o.show?1:0,position:o.position};return"top"===e||"bottom"===e?("top"===e?s.top="0px":s.bottom="0px",o.inverse?s.right="0px":s.left="0px",s.width=t.percent+"%",s.height=o.thickness,s.transition=(i?"width "+o.transition.speed+", ":"")+"opacity "+o.transition.opacity):"left"!==e&&"right"!==e||("left"===e?s.left="0px":s.right="0px",o.inverse?s.top="0px":s.bottom="0px",s.height=t.percent+"%",s.width=o.thickness,s.transition=(i?"height "+o.transition.speed+", ":"")+"opacity "+o.transition.opacity),s},progress:function(){return t?window.VueProgressBarEventBus.RADON_LOADING_BAR:{percent:0,options:{canSuccess:!0,show:!1,color:"rgb(19, 91, 55)",failedColor:"red",thickness:"2px",transition:{speed:"0.2s",opacity:"0.6s",termination:300},location:"top",autoRevert:!0,inverse:!1}}}}};return{install:function(o){var t=1<arguments.length&&void 0!==arguments[1]?arguments[1]:{},i=(o.version.split(".")[0],"undefined"!=typeof window),e={$vm:null,state:{tFailColor:"",tColor:"",timer:null,cut:0},init:function(t){this.$vm=t},start:function(t){var o=this;this.$vm&&(t||(t=3e3),this.$vm.RADON_LOADING_BAR.percent=0,this.$vm.RADON_LOADING_BAR.options.show=!0,this.$vm.RADON_LOADING_BAR.options.canSuccess=!0,this.state.cut=1e4/Math.floor(t),clearInterval(this.state.timer),this.state.timer=setInterval(function(){o.increase(o.state.cut*Math.random()),95<o.$vm.RADON_LOADING_BAR.percent&&o.$vm.RADON_LOADING_BAR.options.autoFinish&&o.finish()},100))},set:function(t){this.$vm.RADON_LOADING_BAR.options.show=!0,this.$vm.RADON_LOADING_BAR.options.canSuccess=!0,this.$vm.RADON_LOADING_BAR.percent=Math.floor(t)},get:function(){return Math.floor(this.$vm.RADON_LOADING_BAR.percent)},increase:function(t){this.$vm.RADON_LOADING_BAR.percent=Math.min(99,this.$vm.RADON_LOADING_BAR.percent+Math.floor(t))},decrease:function(t){this.$vm.RADON_LOADING_BAR.percent=this.$vm.RADON_LOADING_BAR.percent-Math.floor(t)},hide:function(){var t=this;clearInterval(this.state.timer),this.state.timer=null,setTimeout(function(){t.$vm.RADON_LOADING_BAR.options.show=!1,o.nextTick(function(){setTimeout(function(){t.$vm.RADON_LOADING_BAR.percent=0},100),t.$vm.RADON_LOADING_BAR.options.autoRevert&&setTimeout(function(){t.revert()},300)})},this.$vm.RADON_LOADING_BAR.options.transition.termination)},pause:function(){clearInterval(this.state.timer)},finish:function(){this.$vm&&(this.$vm.RADON_LOADING_BAR.percent=100,this.hide())},fail:function(){this.$vm.RADON_LOADING_BAR.options.canSuccess=!1,this.$vm.RADON_LOADING_BAR.percent=100,this.hide()},setFailColor:function(t){this.$vm.RADON_LOADING_BAR.options.failedColor=t},setColor:function(t){this.$vm.RADON_LOADING_BAR.options.color=t},setLocation:function(t){this.$vm.RADON_LOADING_BAR.options.location=t},setTransition:function(t){this.$vm.RADON_LOADING_BAR.options.transition=t},tempFailColor:function(t){this.state.tFailColor=this.$vm.RADON_LOADING_BAR.options.failedColor,this.$vm.RADON_LOADING_BAR.options.failedColor=t},tempColor:function(t){this.state.tColor=this.$vm.RADON_LOADING_BAR.options.color,this.$vm.RADON_LOADING_BAR.options.color=t},tempLocation:function(t){this.state.tLocation=this.$vm.RADON_LOADING_BAR.options.location,this.$vm.RADON_LOADING_BAR.options.location=t},tempTransition:function(t){this.state.tTransition=this.$vm.RADON_LOADING_BAR.options.transition,this.$vm.RADON_LOADING_BAR.options.transition=t},revertColor:function(){this.$vm.RADON_LOADING_BAR.options.color=this.state.tColor,this.state.tColor=""},revertFailColor:function(){this.$vm.RADON_LOADING_BAR.options.failedColor=this.state.tFailColor,this.state.tFailColor=""},revertLocation:function(){this.$vm.RADON_LOADING_BAR.options.location=this.state.tLocation,this.state.tLocation=""},revertTransition:function(){this.$vm.RADON_LOADING_BAR.options.transition=this.state.tTransition,this.state.tTransition={}},revert:function(){this.$vm.RADON_LOADING_BAR.options.autoRevert&&(this.state.tColor&&this.revertColor(),this.state.tFailColor&&this.revertFailColor(),this.state.tLocation&&this.revertLocation(),!this.state.tTransition||void 0===this.state.tTransition.speed&&void 0===this.state.tTransition.opacity||this.revertTransition())},parseMeta:function(t){for(var o in t.func){var i=t.func[o];switch(i.call){case"color":switch(i.modifier){case"set":this.setColor(i.argument);break;case"temp":this.tempColor(i.argument)}break;case"fail":switch(i.modifier){case"set":this.setFailColor(i.argument);break;case"temp":this.tempFailColor(i.argument)}break;case"location":switch(i.modifier){case"set":this.setLocation(i.argument);break;case"temp":this.tempLocation(i.argument)}break;case"transition":switch(i.modifier){case"set":this.setTransition(i.argument);break;case"temp":this.tempTransition(i.argument)}}}}},s=function(t,o){for(var i,e,s=1;s<arguments.length;++s)for(i in e=arguments[s])Object.prototype.hasOwnProperty.call(e,i)&&(t[i]=e[i]);return t}({canSuccess:!0,show:!1,color:"#73ccec",position:"fixed",failedColor:"red",thickness:"2px",transition:{speed:"0.2s",opacity:"0.6s",termination:300},autoRevert:!0,location:"top",inverse:!1,autoFinish:!0},t),n=new o({data:{RADON_LOADING_BAR:{percent:0,options:s}}});i&&(window.VueProgressBarEventBus=n,e.init(n)),o.component("vue-progress-bar",r),o.prototype.$Progress=e}}});
 
 
 /***/ }),
