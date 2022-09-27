@@ -7,6 +7,7 @@
           <span class="head-span">stock management system</span>
         </div>
       </div>
+      <!-- search -->
       <div class="col-2">
         <button type="submit" class="btn backColor" @click="create">
           <i class="fa-solid fa-circle-plus mr-1"></i> Create
@@ -58,7 +59,11 @@
         </form>
       </div>
     </div>
+    <!-- search end -->
+
+    
     <div class="row">
+      <!-- create -->
       <div class="col-3">
         <div class="card">
           <div class="card-header backColor">
@@ -67,6 +72,7 @@
             </h4>
           </div>
           <div class="card-body">
+            <AlertError :form="product" message="There were some problems with your input." />
             <form action="" @submit.prevent="isEditMode ? update() : store()">
               <div class="form-group mb-1">
                 <label for="">Name</label>
@@ -76,6 +82,7 @@
                   class="form-control"
                   placeholder="enter product name"
                 />
+                <HasError :form="product" field="name" />
               </div>
               <div class="form-group mb-1">
                 <label for="">Brand</label>
@@ -85,6 +92,7 @@
                   class="form-control"
                   placeholder="enter product brand"
                 />
+                <HasError :form="product" field="brand" />
               </div>
               <div class="form-group mb-1">
                 <label for="">Model</label>
@@ -94,6 +102,7 @@
                   class="form-control"
                   placeholder="enter product model"
                 />
+                <HasError :form="product" field="model" />
               </div>
               <div class="form-group mb-1">
                 <label for="">Category</label>
@@ -112,6 +121,7 @@
                   class="form-control"
                   placeholder="enter product name"
                 />
+                <HasError :form="product" field="sale_price" />
               </div>
               <div class="form-group mb-1">
                 <label for="">Stock</label>
@@ -121,6 +131,7 @@
                   class="form-control"
                   placeholder="enter product stock"
                 />
+              
               </div>
               <button type="submit" class="btn btn-block mt-3 backColor">
                 <i class="fa-solid fa-floppy-disk mr-1"></i>
@@ -130,6 +141,9 @@
           </div>
         </div>
       </div>
+      <!-- createEnd -->
+
+      <!-- data -->
       <div class="col-9">
         <table class="table">
           <thead>
@@ -164,12 +178,27 @@
         </table>
         <pagination :data="products"  @pagination-change-page="view"> </pagination>
       </div>
+      <!-- data end -->
     </div>
+  
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import Form from 'vform';
+import {
+  Button,
+  HasError,
+  AlertError,
+  AlertErrors,
+  AlertSuccess
+} from 'vform/src/components/bootstrap5';
+Vue.component(Button.name, Button)
+Vue.component(HasError.name, HasError)
+Vue.component(AlertError.name, AlertError)
+Vue.component(AlertErrors.name, AlertErrors)
+Vue.component(AlertSuccess.name, AlertSuccess)
 
 export default {
   name: "ProductComponent",
@@ -178,7 +207,7 @@ export default {
       isEditMode: false,
       search:'',
       products: {},
-      product: {
+      product: new Form( {
         id:"",
         name: "",
         brand: "",
@@ -186,7 +215,7 @@ export default {
         category: "",
         sale_price: "",
         stock: "",
-      },
+      }),
     };
   },
   methods: {
@@ -196,50 +225,28 @@ export default {
       });
     },
     create() {
+      this.product.clear();
       this.isEditMode = false;
-      this.product.name = "";
-      this.product.brand = "";
-      this.product.model = "";
-      this.product.category = "";
-      this.product.sale_price = "";
-      this.product.stock = "";
+      this.product.reset();
+     
     },
     store() {
-      axios.post("/api/products", this.product).then((res) => {
+      this.product.post("/api/products").then((res) => {
         this.view();
-        this.product = {
-          id: "",
-          name: "",
-          brand: "",
-          model: "",
-          category: "",
-          sale_price: "",
-          stock: "",
-        };
+        this.product.reset();
       });
     },
     edit(product) {
+      this.product.clear();
       this.isEditMode = true;
-      this.product.id = product.id;
-      this.product.name = product.name;
-      this.product.brand = product.brand;
-      this.product.model = product.model;
-      this.product.category = product.category;
-      this.product.sale_price = product.sale_price;
-      this.product.stock = product.stock;
-      console.log(product.id);
+      this.product.fill(product);
     },
     update() {
-      axios
-        .put(`/api/products/${this.product.id}`, this.product)
+      this.product
+        .put(`/api/products/${this.product.id}`)
         .then((res) => {
           this.view();
-          this.product.name = "";
-          this.product.brand = "";
-          this.product.model = "";
-          this.product.category = "";
-          this.product.sale_price = "";
-          this.product.stock = "";
+          this.product.reset();
         });
     },
     destroy(id){
