@@ -5572,11 +5572,7 @@ var render = function render() {
         return _vm.onSearch();
       }]
     }
-  }, [_c("option", {
-    attrs: {
-      value: ""
-    }
-  }, [_vm._v("Category")]), _vm._v(" "), _vm._l(_vm.categories, function (category) {
+  }, [_vm._m(1), _vm._v(" "), _vm._l(_vm.categories, function (category) {
     return _c("option", {
       key: category.id,
       domProps: {
@@ -5618,7 +5614,7 @@ var render = function render() {
         _vm.search = $event.target.value;
       }
     }
-  }), _vm._v(" "), _vm._m(1)])])])]), _vm._v(" "), _c("div", {
+  }), _vm._v(" "), _vm._m(2)])])])]), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-3"
@@ -5830,7 +5826,7 @@ var render = function render() {
     staticClass: "col-9"
   }, [_c("table", {
     staticClass: "table"
-  }, [_vm._m(2), _vm._v(" "), _c("tbody", _vm._l(_vm.products.data, function (product) {
+  }, [_vm._m(3), _vm._v(" "), _c("tbody", _vm._l(_vm.products.data, function (product) {
     return _c("tr", {
       key: product.id
     }, [_c("td", [_vm._v(_vm._s(product.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.brand_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.category_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.sale_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.stock))]), _vm._v(" "), _c("td", [_c("button", {
@@ -5875,6 +5871,15 @@ var staticRenderFns = [function () {
   }), _vm._v(" iSYS APP")]), _vm._v(" "), _c("span", {
     staticClass: "head-span"
   }, [_vm._v("stock management system")])])]);
+}, function () {
+  var _vm = this,
+      _c = _vm._self._c;
+
+  return _c("option", {
+    attrs: {
+      value: ""
+    }
+  }, [_c("b", [_vm._v("Category")])]);
 }, function () {
   var _vm = this,
       _c = _vm._self._c;
@@ -11251,7 +11256,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.head-title[data-v-9e91ef8e] {\n  color: #245565;\n  font-weight: bold;\n}\n.head-span[data-v-9e91ef8e] {\n  font-size: 14px;\n}\n/* h1{\n    color: #245565;\n    font-weight: bold;\n} */\n.backColor[data-v-9e91ef8e] {\n  background-color: #245565;\n  color: #fff;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n/* div.dropdown-menu.open{\n  max-height: 114px !important;\n  overflow: hidden;\n}\nul.dropdown-menu.inner{\n  max-height: 160px !important;\n  overflow-y: auto;\n} */\n.head-title[data-v-9e91ef8e] {\n  color: #245565;\n  font-weight: bold;\n}\n.head-span[data-v-9e91ef8e] {\n  font-size: 14px;\n}\n/* h1{\n    color: #245565;\n    font-weight: bold;\n} */\n.backColor[data-v-9e91ef8e] {\n  background-color: #245565;\n  color: #fff;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

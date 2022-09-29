@@ -21,6 +21,7 @@
             v-model="brand"
             aria-label="Default select example"
             @change="onChange()"
+            
           >
             <option value="">Brand</option>
             <option v-for="brand in brands" :key="brand.id" :value="brand.brand_name">
@@ -36,7 +37,7 @@
                   aria-label="Default select example"
                   @change="onSearch()"
                 >
-                  <option value="">Category</option>
+                  <option value=""><b>Category</b> </option>
                   <option
                     v-for="category in categories"
                     :key="category.id"
@@ -305,7 +306,7 @@ export default {
       this.product.fill(product);
     },
     update() {
-      console.log(this.product.id);
+      console.log(this.product.id)
       this.product.put(`/api/products/${this.product.id}`).then((res) => {
         
         this.view();
@@ -351,6 +352,14 @@ export default {
 </script>
 
 <style scoped>
+/* div.dropdown-menu.open{
+  max-height: 114px !important;
+  overflow: hidden;
+}
+ul.dropdown-menu.inner{
+  max-height: 160px !important;
+  overflow-y: auto;
+} */
 .head-title {
   color: #245565;
   font-weight: bold;
