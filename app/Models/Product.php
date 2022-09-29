@@ -8,6 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     protected $fillable = [
-        'name','brand','category','sale_price','stock'
+        'name','brand_id','category_id','sale_price','stock'
     ];
+    public function brand(){
+        return $this->belongsTo('App\Models\Brand','brand_id');
+    }
+    public function category(){
+        return $this->belongsTo('App\Models\Category','category_id');
+    }
 }

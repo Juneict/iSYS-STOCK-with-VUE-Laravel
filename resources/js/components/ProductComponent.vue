@@ -13,27 +13,38 @@
           <i class="fa-solid fa-circle-plus mr-1"></i> Create
         </button>
       </div>
-      <div class="col-2">
-        <select
-          class="form-control form-select"
-          aria-label="Default select example"
-        >
-          <option selected>Brand</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
-        </select>
+      <div class="col-2" >
+        <div class="form-group mb-1">
+          
+          <select
+            class="form-select"
+            v-model="brand"
+            aria-label="Default select example"
+            @change="onChange()"
+          >
+            <option value="">Brand</option>
+            <option v-for="brand in brands" :key="brand.id" :value="brand.brand_name">
+              {{ brand.brand_name }}
+            </option>
+          </select>
+        </div>
       </div>
       <div class="col-2">
         <select
-          class="form-control form-select"
-          aria-label="Default select example"
-        >
-          <option selected>Category</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
-        </select>
+                  class="form-select"
+                  v-model="category"
+                  aria-label="Default select example"
+                  @change="onSearch()"
+                >
+                  <option value="">Category</option>
+                  <option
+                    v-for="category in categories"
+                    :key="category.id"
+                    :value="category.category_name"
+                  >
+                    {{ category.category_name }}
+                  </option>
+          </select>
       </div>
       <div class="col-2">
         <form action="" @submit.prevent="view">
@@ -82,23 +93,39 @@
               </div>
               <div class="form-group mb-1">
                 <label for="">Brand</label>
-                <input
-                  type="text"
-                  v-model="product.brand"
-                  class="form-control"
-                  placeholder="enter product brand"
-                />
-                <HasError :form="product" field="brand" />
+                <select
+                  class="form-select"
+                  v-model="product.brand_id"
+                  aria-label="Default select example"
+                >
+                  <option value="">Select</option>
+                  <option
+                    v-for="brand in brands"
+                    :key="brand.id"
+                    :value="brand.id"
+                  >
+                    {{ brand.brand_name }}
+                  </option>
+                </select>
               </div>
               <div class="form-group mb-1">
                 <label for="">Category</label>
-                <input
-                  type="text"
-                  v-model="product.category"
-                  class="form-control"
-                  placeholder="enter product category"
-                />
+                <select
+                  class="form-select"
+                  v-model="product.category_id"
+                  aria-label="Default select example"
+                >
+                  <option value="">Select</option>
+                  <option
+                    v-for="category in categories"
+                    :key="category.id"
+                    :value="category.id"
+                  >
+                    {{ category.category_name }}
+                  </option>
+                </select>
               </div>
+
               <div class="form-group mb-1">
                 <label for="">Price</label>
                 <input
@@ -133,6 +160,7 @@
         <table class="table">
           <thead>
             <tr>
+              <th>ID</th>
               <th>Name</th>
               <th>Brand</th>
               <th>Category</th>
@@ -143,9 +171,10 @@
           </thead>
           <tbody>
             <tr v-for="product in products.data" :key="product.id">
+              <td>{{ product.id}}</td>
               <td>{{ product.name }}</td>
-              <td>{{ product.brand }}</td>
-              <td>{{ product.category }}</td>
+              <td>{{ product.brand_name }}</td>
+              <td>{{ product.category_name }}</td>
               <td>{{ product.sale_price }}</td>
               <td>{{ product.stock }}</td>
               <td>
@@ -192,18 +221,58 @@ export default {
     return {
       isEditMode: false,
       search: "",
+      brand: "",
+      category:"",
       products: {},
+      brands: [],
+      categories: [],
       product: new Form({
-        id: "",
+        id:"",
         name: "",
-        brand: "",
-        category: "",
+        brand_id: "",
+        category_id: "",
         sale_price: "",
         stock: "",
       }),
     };
   },
   methods: {
+    onChange(){
+      this.$Progress.start();
+      axios
+        .get(`/api/products?search=${this.brand}`)
+        .then((res) => {
+          console.log(this.category);
+          this.products = res.data;
+          this.$Progress.finish();
+        })
+        .catch((error) => {
+          this.$Progress.fail();
+        });
+    },
+    onSearch(){
+      this.$Progress.start();
+      axios
+        .get(`/api/products?search=${this.category}`)
+        .then((res) => {
+          console.log(this.category);
+          this.products = res.data;
+          this.$Progress.finish();
+        })
+        .catch((error) => {
+          this.$Progress.fail();
+        });
+    },
+    getBrand() {
+      axios.get("/api/brands").then((res) => {
+        this.brands = res.data;
+      });
+    },
+    getCategory() {
+      axios.get("/api/categories").then((res) => {
+        this.categories = res.data;
+      });
+    },
     view(page = 1) {
       this.$Progress.start();
       axios
@@ -219,12 +288,6 @@ export default {
     create() {
       this.product.clear();
       this.isEditMode = false;
-      this.product.reset();
-      model: "",
-        this.product.post("/api/products").then((res) => {
-          this.view();
-          this.product.reset();
-        });
     },
     store() {
       this.product.post("/api/products").then((res) => {
@@ -242,16 +305,22 @@ export default {
       this.product.fill(product);
     },
     update() {
+      console.log(this.product.id);
       this.product.put(`/api/products/${this.product.id}`).then((res) => {
+        
         this.view();
         this.product.reset();
         Toast.fire({
           icon: "success",
           title: "Updated successfully",
         });
-      });
+      })
+      .catch((error)=>{
+        console.log(error);
+      })
     },
     destroy(id) {
+      console.log(product);
       Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
@@ -261,8 +330,9 @@ export default {
         cancelButtonColor: "#d33",
         confirmButtonText: "Yes, delete it!",
       }).then((result) => {
-        axios.delete(`/api/products/${id}`).then((res) => this.view());
+        
         if (result.isConfirmed) {
+          axios.delete(`/api/products/${this.product.id}`).then((res) => this.view());
           Swal.fire("Deleted!", "Your product has been deleted.", "success");
           Toast.fire({
             icon: "success",
@@ -274,6 +344,8 @@ export default {
   },
   created() {
     this.view();
+    this.getBrand();
+    this.getCategory();
   },
 };
 </script>
