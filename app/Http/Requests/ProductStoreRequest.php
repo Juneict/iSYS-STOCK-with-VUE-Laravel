@@ -25,7 +25,7 @@ class ProductStoreRequest extends FormRequest
     {
         return [
             'name'=>'required|string',
-            'model'=>'required|string',
+            
             'brand'=>'nullable|string',
             'category'=>'nullable|string',
             'sale_price'=>'required|numeric',
@@ -36,7 +36,10 @@ class ProductStoreRequest extends FormRequest
     {
         return [
             'name.required'=>"အမည်ထည့်ရန်လိုအပ်သည်",
-            'name.string' =>'စာသားဖြစ်ရန်လိုအပ်သည်'
+            'name.string' =>'စာသားဖြစ်ရန်လိုအပ်သည်',
+            'sale_price.required'=>"ဈေးထည့်ရန်လိုအပ်သည်",
+            
+            'brand.required'=>"brand ထည့်ရန်လိုအပ်သည်",
         ];
     }
 }

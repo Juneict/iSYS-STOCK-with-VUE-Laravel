@@ -15,11 +15,15 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return Product::when(request('search'),function($query){
-            $query->where('brand','like','%'.request('search').'%')
-                  ->orwhere('name','like','%'.request('search').'%')
-                  ->orwhere('category','like','%'.request('search').'%');
-        })->orderBy('id','desc')->paginate(10);
+        return $products= Product::select('products.id as id','products.name as name','products.stock as stock','products.brand_id as brand_id','products.category_id as category_id','products.sale_price as sale_price','brands.brand_name as brand_name','categories.category_name as category_name')->when(request('search'),function($query){
+            $query->where('name','like','%'.request('search').'%')
+                  ->orwhere('brand_name','like','%'.request('search').'%')
+                  ->orwhere('category_name','like','%'.request('search').'%');
+        })
+        ->rightjoin('brands','products.brand_id', '=', 'brands.id')
+        ->rightjoin('categories','products.category_id', '=', 'categories.id')
+        ->orderBy('products.id', 'DESC')
+        ->paginate(10);
     }
 
     /**
@@ -75,7 +79,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        $product->update($request->only('name','model','brand','category','sale_price','stock'));
+        $product->update($request->all());
         return $product;
     }
 
